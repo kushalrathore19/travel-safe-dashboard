@@ -6,7 +6,7 @@ Travel-Safe is a web application designed for travelers to evaluate global desti
 
 ## 📡 APIs to be Used
 1. **REST Countries API:** (https://restcountries.com/v3.1/all) - Used for fetching flags, population, and regions.
-2. **ExchangeRate-API:** (https://www.exchangerate-api.com/) - Used for real-time USD conversion rates.
+2. **ExchangeRate-API:** (https://www.exchangerate-api.com/) - Used for real-time INR conversion rates.
 
 ## 🚀 Planned Features
 - **Search:** Find countries by name or capital.
