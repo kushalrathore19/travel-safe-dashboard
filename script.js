@@ -1,63 +1,126 @@
-const countriesUrl = "https://restcountries.com/v3.1/all?fields=name,flags,currencies,region,capital";
+const countriesUrl = "https://restcountries.com/v3.1/all?fields=name,flags,currencies,region,capital,independent";
 const apiKey = "5b388e9a2532042d2a9a3c88"; 
 const exchangeUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/INR`;
 
 let combinedData = [];
+let currentRegion = 'all'; 
 
-async function initDashboard() {
-    const container = document.getElementById('country-container');
-    container.innerHTML = "<p>Loading Global Data...</p>";
-
+async function init() {
     try {
-        const [countriesRes, exchangeRes] = await Promise.all([
-            fetch(countriesUrl), // Now uses the ?fields= parameter
-            fetch(exchangeUrl)
-        ]);
+        const [cRes, eRes] = await Promise.all([fetch(countriesUrl), fetch(exchangeUrl)]);
+        const countries = await cRes.json();
+        const eData = await eRes.json();
+        const rates = eData.conversion_rates;
 
-        if (!countriesRes.ok) throw new Error("Countries API limit/error");
-        if (!exchangeRes.ok) throw new Error("Exchange API error - check your key");
+        const sovereign = countries.filter(c => c.independent === true);
 
-        const countries = await countriesRes.json();
-        const exchangeData = await exchangeRes.json();
-        const rates = exchangeData.conversion_rates;
-
-        // Combine the data
-        combinedData = countries.map(country => {
-            const currencyCode = country.currencies ? Object.keys(country.currencies)[0] : "N/A";
-            
-            // We get the rate for the local currency relative to 1 INR
-            let localRate = rates[currencyCode] || "N/A";
-
+        combinedData = sovereign.map(c => {
+            const code = c.currencies ? Object.keys(c.currencies)[0] : "N/A";
             return {
-                name: country.name.common,
-                flag: country.flags.svg,
-                region: country.region,
-                capital: country.capital ? country.capital[0] : "N/A",
-                currency: currencyCode,
-                rate: localRate 
+                name: c.name.common,
+                flag: c.flags.svg,
+                region: c.region,
+                capital: c.capital.length > 0 ? c.capital[0] : "N/A",
+                currency: code,
+                rate: rates[code] || 0
             };
-});
+        });
 
-        displayCards(combinedData);
-
-    } catch (error) {
-        console.error("Error:", error);
-        container.innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
+        applyFilters(); 
+    } catch (err) {
+        document.getElementById('country-container').innerHTML = "Error loading data.";
     }
 }
 
-function displayCards(data) {
+function render(data) {
     const container = document.getElementById('country-container');
-    container.innerHTML = data.map(item => `
-        <div class="country-card">
-            <img src="${item.flag}" alt="${item.name} Flag">
-            <div class="card-content">
+    
+    container.innerHTML = data.map((item, index) => {
+        const delay = index * 0.05; 
+        
+        return `
+        <div class="country-card" style="animation-delay: ${delay}s">
+            <img src="${item.flag}" alt="${item.name}">
+            <div class="content">
                 <h3>${item.name}</h3>
-                <p><strong>Region:</strong> ${item.region}</p>
-                <p><strong>Capital:</strong> ${item.capital}</p>
-                <p class="rate-info">1 INR = ${item.rate} ${item.currency}</p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span>Capital</span>
+                        <p>${item.capital}</p>
+                    </div>
+                    <div class="stat-item">
+                        <span>Region</span>
+                        <p>${item.region}</p>
+                    </div>
+                </div>
+                <div class="rate-badge">
+                    1 INR = ${item.rate ? item.rate.toFixed(2) : "N/A"} ${item.currency}
+                </div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
+
+    initSpotlightEffect();
 }
-initDashboard();
+
+function initSpotlightEffect() {
+    const cards = document.querySelectorAll('.country-card');
+    
+    cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+           
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+    });
+}
+
+
+function applyFilters() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const sort = document.getElementById('sortOrder').value;
+
+    let filtered = combinedData.filter(c => {
+        const matchesSearch = c.name.toLowerCase().includes(searchTerm) || 
+                              c.capital.toLowerCase().includes(searchTerm);
+        const matchesRegion = currentRegion === "all" || c.region === currentRegion;
+        return matchesSearch && matchesRegion;
+    });
+
+    if (sort === "name") {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sort === "rateLow") {
+        filtered.sort((a, b) => b.rate - a.rate);
+    } else if (sort === "rateHigh") {
+        filtered.sort((a, b) => a.rate - b.rate);
+    }
+
+    render(filtered);
+}
+
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('sortOrder').addEventListener('change', applyFilters);
+
+document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+
+        e.target.classList.add('active');
+
+        currentRegion = e.target.getAttribute('data-region');
+        applyFilters();
+    });
+});
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+});
+
+init();

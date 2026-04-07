@@ -3,16 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TravelSafe Dashboard</title>
+    <title>Travel-Safe | Global Intelligence</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>TravelSafe 🌍</h1>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <aside class="side-command">
+        <button id="themeToggle" class="theme-btn" title="Toggle Theme">🌓</button>
+    </aside>
+
+    <div class="app-wrapper">
+        <header class="bento-header">
+            <div class="title-section">
+                <h1>Travel-Safe</h1>
+                <p>Global economic intelligence at your fingertips</p>
+            </div>
+            
+            <div class="controls-section">
+                <input type="text" id="searchInput" placeholder="Search destination...">
+                
+                <select id="sortOrder" class="sort-select">
+                    <option value="name">Sort: Alphabetical (A-Z)</option>
+                    <option value="rateLow">Sort: Budget (High to Low INR)</option>
+                    <option value="rateHigh">Sort: Premium (Low to High INR)</option>
+                </select>
+            </div>
+
+            <div class="filter-chips" id="regionFilters">
+                <button class="chip active" data-region="all">All</button>
+                <button class="chip" data-region="Africa">Africa</button>
+                <button class="chip" data-region="Americas">Americas</button>
+                <button class="chip" data-region="Asia">Asia</button>
+                <button class="chip" data-region="Europe">Europe</button>
+                <button class="chip" data-region="Oceania">Oceania</button>
+            </div>
         </header>
-    
-    <main id="country-container">
-    </main>
+
+        <main id="country-container">
+            <p class="loading">Loading Global Data...</p>
+        </main>
+    </div>
 
     <script src="script.js"></script>
 </body>
