@@ -1,20 +1,29 @@
-# 🌍 Travel-Safe: Global Intelligence Dashboard
+content = """# 🌍 Travel-Safe: Global Intelligence Dashboard
 
-## 📖 Project Purpose
-Travel-Safe is a web application designed for travelers to evaluate global destinations. It combines geographic data with real-time financial exchange rates to help users understand their purchasing power abroad.
+*A premium, glassmorphic web application for evaluating global travel destinations based on real-time economic data and geographical insights.*
 
+## 📌 Project Overview
+Travel-Safe bridges the gap between basic country information and financial reality. Designed with a modern, interactive user interface, the dashboard allows users to compare the purchasing power of the Indian Rupee (INR) against global currencies while exploring essential destination statistics. 
 
-## 📡 APIs to be Used
-1. **REST Countries API:** (https://restcountries.com/v3.1/all) - Used for fetching flags, population, and regions.
-2. **ExchangeRate-API:** (https://www.exchangerate-api.com/) - Used for real-time INR conversion rates.
+This project was built from the ground up without the use of external UI libraries or AI templates, demonstrating a strong command of Vanilla JavaScript, asynchronous data handling, and modern CSS architecture.
 
-## 🚀 Planned Features
-- **Search:** Find countries by name or capital.
-- **Filter:** View countries by Continent (Region) using `.filter()`.
-- **Sort:** Rank countries by Population or Exchange Rate value using `.sort()`.
-- **Responsive UI:** A grid-based layout for mobile and desktop users.
+## ✨ Core Features
+- **Real-Time Currency Power:** Live exchange rate integration showing the exact value of 1 INR in the local currency of every independent, sovereign nation.
+- **Magnetic Spotlight UI:** A highly interactive, zero-library "Spotlight" hover effect driven by dynamic CSS variables and JavaScript coordinate tracking.
+- **Glassmorphic Boarding Passes:** Data is presented in a thematic, airline-ticket style UI with dynamic entrance animations.
+- **Smart Filtering & Search:** Instant search and region-based filtering using Array Higher-Order Functions (`.filter()`).
+- **Dynamic Sorting:** Rank destinations alphabetically or by currency strength using Array `.sort()`.
+- **Theme Engine:** Fully integrated Light/Dark mode toggle for optimal viewing in any environment.
 
-## 💻 Technologies
-- HTML5 & CSS3 (Custom styling)
-- Vanilla JavaScript (ES6+)
-- Fetch API for data integration
+## 🛠️ Technology Stack
+- **Frontend:** Semantic HTML5, Advanced CSS3 (CSS Variables, Flexbox/Grid, Keyframe Animations, Backdrop Filters)
+- **Logic:** Vanilla JavaScript (ES6+, Async/Await, Array HOFs)
+- **APIs Integrated:**
+  - [REST Countries API](https://restcountries.com/) (Geographic and demographic data)
+  - [ExchangeRate-API](https://www.exchangerate-api.com/) (Live financial conversion rates)
+
+## 🚀 Installation & Setup
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/yourusername/travel-safe.git](https://github.com/yourusername/travel-safe.git)
+   cd travel-safe
